@@ -4,7 +4,6 @@
 #define N 3
 #define L 100
 #define MAX 2000
-//int queue[L]= { 1,2,3,4,5,3,2,1,4,5 };//访问序列
 int queue[L];
 int list[N];//内存页面队列
 int count = 0;//内存页面使用统计
