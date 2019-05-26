@@ -4,6 +4,7 @@
 #define N 3
 #define L 100
 #define MAX 2000
+//int queue[L]= { 1,2,3,4,5,3,2,1,4,5 };//访问序列
 int queue[L];
 int list[N];//内存页面队列
 int count = 0;//内存页面使用统计
@@ -27,7 +28,7 @@ void sequence_generate(int p,int e,double t,int m)//序列随机生成,其中p�
 	int choice;
 	double r;
 	srand(time(0));
-	for (int i = 0; i < m; i++,que_num++)//生成L个取值范围在p和p+e之间的随机数作为访问序列
+	for (int i = 0; i < m; i++,que_num++)//生成m个取值范围在p和p+e之间的随机数作为访问序列
 		queue[que_num] = rand() % e + p;
 	m_count++;
 	printf("序列生成成功，访问序列为：\n");
@@ -39,7 +40,7 @@ void sequence_generate(int p,int e,double t,int m)//序列随机生成,其中p�
 	scanf_s("%d",&choice);
 	if (choice == 1)
 	{
-		if (L < m_count*m)
+		if (L < (m_count+1)*m)
 		{
 			printf("已超出访问序列最大长度，自动返回\n");
 			return;
@@ -288,7 +289,7 @@ void pba(int number)//p代表已修改页面链表，q代表空闲页面链表
 		{
 			if (r->val == number)
 			{
-				Insert_LNode(p, number, r->num);;//将其从q中加入p的队尾
+				Insert_LNode(p, number, r->num);//将其从q中加入p的队尾
 				QNode *s = q;//将其从q中移除
 				for (int ii = 0; ii < 2; ii++)
 				{
@@ -307,6 +308,7 @@ void pba(int number)//p代表已修改页面链表，q代表空闲页面链表
 						min = t->num;
 					t = t->next;
 				}
+				Insert_LNode(q, t->val, t->num);//将其插入到q中
 				t = p;
 				for (i = 0; i < N; i++)
 				{
@@ -317,7 +319,6 @@ void pba(int number)//p代表已修改页面链表，q代表空闲页面链表
 					}
 					t = t->next;
 				}
-				count2--;
 				return;
 			}
 			r = r->next;
@@ -331,7 +332,7 @@ void pba(int number)//p代表已修改页面链表，q代表空闲页面链表
 			t = t->next;
 		}
 		t = p->next;
-		for (i = 0; i < N; i++)//将最先进入的拿一个页面淘汰，加入到空闲页面链表
+		for (i = 0; i < N; i++)//将最先进入的那一个页面淘汰，加入到空闲页面链表
 		{
 			if (t->num == min)
 			{
